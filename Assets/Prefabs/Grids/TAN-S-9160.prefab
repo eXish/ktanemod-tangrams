@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1849674758752198}
+  m_IsPrefabParent: 1
+--- !u!1 &1849674758752198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4535526555079480}
+  - component: {fileID: 114489667165785124}
+  m_Layer: 0
+  m_Name: TAN-S-9160
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4535526555079480
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1849674758752198}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114489667165785124
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1849674758752198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9e77621453a36641b18101b1ba71524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Code: 9160
+  UnderlayTexture: {fileID: 2800000, guid: fad70ba9033975e45a8464aa91bfac47, type: 3}
+  Chip: {fileID: 114315235287866534, guid: b322f01218d8397448a47b773000179b, type: 2}
+  Cells: 000000000100000001000000020000000200000002000000020000000300000004000000
+  AllConnections: '{"Connections":[{"PointA":{"CellIndex":0,"CellPointIndex":0},"PointB":{"CellIndex":2,"CellPointIndex":5}},{"PointA":{"CellIndex":0,"CellPointIndex":1},"PointB":{"CellIndex":2,"CellPointIndex":4}},{"PointA":{"CellIndex":0,"CellPointIndex":2},"PointB":{"CellIndex":6,"CellPointIndex":0}},{"PointA":{"CellIndex":0,"CellPointIndex":3},"PointB":{"CellIndex":8,"CellPointIndex":3}},{"PointA":{"CellIndex":1,"CellPointIndex":4},"PointB":{"CellIndex":8,"CellPointIndex":0}},{"PointA":{"CellIndex":1,"CellPointIndex":5},"PointB":{"CellIndex":7,"CellPointIndex":0}},{"PointA":{"CellIndex":2,"CellPointIndex":2},"PointB":{"CellIndex":3,"CellPointIndex":3}},{"PointA":{"CellIndex":2,"CellPointIndex":3},"PointB":{"CellIndex":3,"CellPointIndex":2}},{"PointA":{"CellIndex":3,"CellPointIndex":0},"PointB":{"CellIndex":4,"CellPointIndex":1}},{"PointA":{"CellIndex":3,"CellPointIndex":1},"PointB":{"CellIndex":7,"CellPointIndex":2}},{"PointA":{"CellIndex":4,"CellPointIndex":0},"PointB":{"CellIndex":5,"CellPointIndex":1}},{"PointA":{"CellIndex":5,"CellPointIndex":0},"PointB":{"CellIndex":7,"CellPointIndex":3}},{"PointA":{"CellIndex":6,"CellPointIndex":1},"PointB":{"CellIndex":7,"CellPointIndex":1}},{"PointA":{"CellIndex":6,"CellPointIndex":2},"PointB":{"CellIndex":8,"CellPointIndex":5}},{"PointA":{"CellIndex":6,"CellPointIndex":3},"PointB":{"CellIndex":8,"CellPointIndex":4}}],"ExternalConnections":[{"CellIndex":5,"CellPointIndex":2},{"CellIndex":5,"CellPointIndex":3},{"CellIndex":1,"CellPointIndex":0},{"CellIndex":1,"CellPointIndex":1},{"CellIndex":1,"CellPointIndex":2},{"CellIndex":1,"CellPointIndex":3},{"CellIndex":8,"CellPointIndex":1},{"CellIndex":8,"CellPointIndex":2},{"CellIndex":0,"CellPointIndex":4},{"CellIndex":0,"CellPointIndex":5},{"CellIndex":0,"CellPointIndex":6},{"CellIndex":0,"CellPointIndex":7},{"CellIndex":2,"CellPointIndex":0},{"CellIndex":2,"CellPointIndex":1},{"CellIndex":4,"CellPointIndex":2},{"CellIndex":4,"CellPointIndex":3}]}'
