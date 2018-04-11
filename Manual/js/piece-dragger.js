@@ -7,31 +7,14 @@ var mainSVG = null;
 var selectedElement = null;
 var globalPoint = null;
 var currentMatrix = null;
-var ctrlDown = false;
 
 $(document).ready(function()
 {
   mainSVG = document.getElementById("mainSVG");
 
-  $(document).keydown(function(event)
-  {
-    if (event.which == "17")
-    {
-      ctrlDown = true;
-    }
-  });
-
-  $(document).keyup(function(event)
-  {
-    if (event.which == "17")
-    {
-      ctrlDown = false;
-    }
-  });
-
   $(".piece").click(function(event)
   {
-    if (ctrlDown)
+    if (event.shiftKey)
     {
       selectedElement = this;
 
