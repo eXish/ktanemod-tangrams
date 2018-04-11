@@ -22,6 +22,12 @@ public class TangramChip : MonoBehaviour
         }
     }
 
+    public KMSelectable[] PinSelectables
+    {
+        get;
+        private set;
+    }
+
     public event Action<int> OnPinInteract = null;
 
     private TextMesh _codeText = null;
@@ -30,14 +36,14 @@ public class TangramChip : MonoBehaviour
     {
         _codeText = GetComponentInChildren<TextMesh>();
 
-        KMSelectable[] pinSelectables = GetComponentsInChildren<KMSelectable>().Where((x) => x != Selectable).ToArray();
+        PinSelectables = GetComponentsInChildren<KMSelectable>(true).Where((x) => x != Selectable).ToArray();
 
-        for (int pinIndex = 0; pinIndex < pinSelectables.Length; ++pinIndex)
+        for (int pinIndex = 0; pinIndex < PinSelectables.Length; ++pinIndex)
         {
             int closurePinIndex = pinIndex;
-            pinSelectables[closurePinIndex].OnInteract += delegate()
+            PinSelectables[closurePinIndex].OnInteract += delegate()
             {
-                pinSelectables[closurePinIndex].AddInteractionPunch(0.4f);
+                PinSelectables[closurePinIndex].AddInteractionPunch(0.4f);
                 OnPinInteract(closurePinIndex);
                 return false;
             };
