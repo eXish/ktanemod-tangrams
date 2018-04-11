@@ -1,0 +1,70 @@
+@font-face
+{
+  font-family:'OCR A Extended';
+  src:url('../fonts/OCRAExtended.ttf');
+}
+
+@font-face
+{
+  font-family:'Autobus Bold';
+  src:url('../fonts/Autobus-Bold.ttf');
+}
+
+body
+{
+  background-color: #88b7f2;
+  font-family:'Autobus Bold', sans-serif;
+  font-size:1.2em;
+  text-shadow: 2px 2px 4px #00000088;
+  color:#fff;
+}
+
+h1
+{
+  line-height:1em;
+  margin:0.4em 0;
+}
+
+svg
+{
+  display:block;
+  margin:0 auto;
+}
+
+.piece
+{
+  cursor: move;
+}
+
+.piece text
+{
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.template
+{
+  display: none;
+}
+
+.form
+{
+  font-size:1.2em;
+  text-align:center;  
+  margin:0 0 10px 0;
+}
+
+select, button
+{
+  border:2px solid #000000;
+  background-color:#00000044;
+  padding:6px;
+  font-family:'Autobus Bold', sans-serif;
+  color:#fff;
+  font-size:1em;
+}
