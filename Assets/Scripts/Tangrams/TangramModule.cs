@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class TangramModule : MonoBehaviour
@@ -21,9 +22,12 @@ public class TangramModule : MonoBehaviour
     private KMAudio _audio = null;
     private KMSelectable _selectable = null;
     private Tangram _tangram = null;
+    private TangramChip _chip = null;
 
     private TangramDisplayBar _displayBar = null;
     private ParticleSystem _smoke = null;
+
+    private bool _tpWaitingForResult = false;
 
     private readonly List<TangramGridConnection> _previouslySelectedConnections = new List<TangramGridConnection>();
     private TangramGridConnection _selectedConnection = new TangramGridConnection() { PointA = null, PointB = null };
@@ -47,11 +51,11 @@ public class TangramModule : MonoBehaviour
         _tangram = GenerateTangram();
         _tangram.LogInfo(_bombModule);
 
-        TangramChip chip = Instantiate(_tangram.Grid.Chip, transform);
-        chip.UnderlayTexture = _tangram.Grid.UnderlayTexture;
-        chip.Code = _tangram.ChipCode;
+        _chip = Instantiate(_tangram.Grid.Chip, transform);
+        _chip.UnderlayTexture = _tangram.Grid.UnderlayTexture;
+        _chip.Code = _tangram.ChipCode;
 
-        KMSelectable chipSelectable = chip.Selectable;
+        KMSelectable chipSelectable = _chip.Selectable;
 
         _selectable.ChildRowLength = chipSelectable.ChildRowLength;
         _selectable.Children = chipSelectable.Children;
@@ -65,7 +69,7 @@ public class TangramModule : MonoBehaviour
         _selectable.DefaultSelectableIndex = chipSelectable.DefaultSelectableIndex;
         _selectable.UpdateChildren(_selectable.Children[_selectable.DefaultSelectableIndex]);
 
-        chip.OnPinInteract += OnPinInteract;
+        _chip.OnPinInteract += OnPinInteract;
     }
 
     private Tangram GenerateTangram()
@@ -163,18 +167,16 @@ public class TangramModule : MonoBehaviour
                 _previouslySelectedConnections.Add(new TangramGridConnection() { PointA = _selectedConnection.PointA, PointB = _selectedConnection.PointB });
                 if (_previouslySelectedConnections.Count >= RequiredInputCount)
                 {
-                    _bombModule.Log("Module defused!");
-                    _audio.PlaySoundAtTransform(BigPopSound.name, transform);
-                    _smoke.Play();
-                    _bombModule.HandlePass();
+                    ModuleFinish();
                 }
                 else
                 {
-                    _audio.PlaySoundAtTransform(SmallPopSound.name, transform);
+                    StageFinish();
                 }
 
                 _selectedConnection.PointA = null;
                 _selectedConnection.PointB = null;
+                _tpWaitingForResult = false;
             });
         }
         else
@@ -186,6 +188,7 @@ public class TangramModule : MonoBehaviour
 
                 _selectedConnection.PointA = null;
                 _selectedConnection.PointB = null;
+                _tpWaitingForResult = false;
             });            
         }
     }
@@ -193,6 +196,26 @@ public class TangramModule : MonoBehaviour
     private void ZapAndFinish(Action toFinish)
     {
         StartCoroutine(DelayZapCoroutine(toFinish));
+    }
+
+    private void StageFinish()
+    {
+        _audio.PlaySoundAtTransform(SmallPopSound.name, transform);
+    }
+
+    private void ModuleFinish(bool forced = false)
+    {
+        if (forced)
+        {
+            _bombModule.Log("Module force-solved!");
+        }
+        else
+        {
+            _bombModule.Log("Module defused!");
+        }
+        _audio.PlaySoundAtTransform(BigPopSound.name, transform);
+        _smoke.Play();
+        _bombModule.HandlePass();
     }
 
     private IEnumerator DelayZapCoroutine(Action toFinish)
@@ -211,5 +234,61 @@ public class TangramModule : MonoBehaviour
         _displayBar.Progress = 0.0f;
 
         toFinish();
+    }
+
+    private string TwitchHelpMessage = "Pick/set a pair of contact points with !{0} set x y or !{0} pick x y, where x is the input/positive pin index and y is the output/negative pin index. Pin index starts from 1 from the indicated pin and count clockwise round.";
+
+    private IEnumerator ProcessTwitchCommand(string command)
+    {
+        Match setMatch = Regex.Match(command, "^(set|pick) ([0-9]+) ([0-9]+)$", RegexOptions.IgnoreCase);
+        if (!setMatch.Success)
+        {
+            yield break;
+        }
+
+        string inputString = setMatch.Groups[2].Value;
+        string outputString = setMatch.Groups[3].Value;
+
+        int inputIndex = 0;
+        int outputIndex = 0;
+
+        if (int.TryParse(inputString, out inputIndex) && int.TryParse(outputString, out outputIndex))
+        {
+            KMSelectable[] pins = _chip.PinSelectables;
+
+            bool outOfBounds = false;
+            if (inputIndex < 1 || inputIndex > pins.Length)
+            {
+                yield return string.Format("sendtochaterror {0} is not a valid pin index.", inputIndex);
+                outOfBounds = true;
+            }
+
+            if (outputIndex < 1 || outputIndex > pins.Length)
+            {
+                yield return string.Format("sendtochaterror {0} is not a valid pin index.", outputIndex);
+                outOfBounds = true;
+            }
+
+            if (outOfBounds)
+            {
+                yield break;
+            }
+
+            //("Do the right thing" if the command is to be handled; yield a null first)
+            yield return null;
+
+            yield return new KMSelectable[] { pins[inputIndex - 1], pins[outputIndex - 1] };
+
+            _tpWaitingForResult = true;
+            while (_tpWaitingForResult)
+            {
+                yield return null;
+            }
+        }
+    }
+
+    private void TwitchHandleForcedSolve()
+    {
+        ModuleFinish(true);
     }
 }
