@@ -13,7 +13,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Tangrams
   title: Tangrams
-  description: 
+  description: "[b][i]\"A brand new concept for integrated circuit mass production,
+    the ITC: Integrated Tangram Circuit.\"[/i][/b]\r\n\r\nModule idea by Bashly.\r\n\r\n[h1]Official
+    Manual Page[/h1]\r\nThe manual PDFs are included in the download. However, you
+    can also go to the following pages for what you want: [url=https://ashbash1987.github.io/ktanemod-tangrams/Manual/]Manual
+    (in full color)[/url]\n[url=https://ashbash1987.github.io/ktanemod-tangrams/Manual/index_bw.html]Manual
+    (in black & white)[/url]\n[url=https://ashbash1987.github.io/ktanemod-tangrams/Manual/blueprints_color.html]Blueprints
+    only (in full color)[/url]\n[url=https://ashbash1987.github.io/ktanemod-tangrams/Manual/blueprints_bw.html]Blueprints
+    only (in black & white)[/url]\n[url=https://ashbash1987.github.io/ktanemod-tangrams/Manual/blueprints_bw_printer.html]Blueprints
+    only (in black & white, printer-friendly)[/url]\n\n\r[h1]Official Interactive
+    Page[/h1]\r\nThere is also an official interactive page as well to help in experting
+    this module when not able to print out the manual. Go [url=https://ashbash1987.github.io/ktanemod-tangrams/Manual/interactive.html]here[/url]
+    to use the interactive page.\n\n[h1]Mission Makers[/h1]\r\nFor those making custom
+    missions and wanting to reference this module, the type name is [b][i]Tangrams[/i][/b]."
   version: v1.0.0
   outputFolder: E:\Games\SteamLibrary\steamapps\common\Keep Talking and Nobody Explodes\mods
   previewImage: {fileID: 2800000, guid: fc38eff07fb2f51469ac309cca164e26, type: 3}
