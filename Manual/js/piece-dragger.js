@@ -14,7 +14,7 @@ $(document).ready(function()
 
   $(".piece").click(function(event)
   {
-    if (event.ctrlKey || event.metaKey)
+    if (event.shiftKey)
     {
       selectedElement = this;
 
