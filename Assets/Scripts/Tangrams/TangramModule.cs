@@ -133,7 +133,6 @@ public class TangramModule : MonoBehaviour
         }
         else
         {
-            //TODO!!
             _bombModule.LogFormat("Trying to select contact point {0}, but module is busy trying to overload the circuit. Strike.", _tangram.GetExternalConnectionIndex(contactPoint) + 1);
             _bombModule.HandleStrike();
         }
