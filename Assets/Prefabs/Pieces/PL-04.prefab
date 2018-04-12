@@ -53,11 +53,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Shape: 4
   Index: 4
-  Connectivity:
-  - Connections: 01000000020000000300000004000000
-  - Connections: 
-  - Connections: 
-  - Connections: 04000000
-  - Connections: 
-  - Connections: 0000000001000000020000000300000004000000
-  Connections: '[{"Connections":[1,2,3,4]},{"Connections":[]},{"Connections":[]},{"Connections":[4]},{"Connections":[]},{"Connections":[0,1,2,3,4]}]'
+  Connections: '[{"Connections":[1,2,3,4]},{"Connections":[]},{"Connections":[]},{"Connections":[4,2]},{"Connections":[]},{"Connections":[0,1,2,3,4]}]'
