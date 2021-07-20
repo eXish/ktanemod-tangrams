@@ -28,6 +28,7 @@ public class TangramModule : MonoBehaviour
     private ParticleSystem _smoke = null;
 
     private bool _tpWaitingForResult = false;
+    private bool _tpAutosolving = false;
 
     private readonly List<TangramGridConnection> _previouslySelectedConnections = new List<TangramGridConnection>();
     private TangramGridConnection _selectedConnection = new TangramGridConnection() { PointA = null, PointB = null };
@@ -140,7 +141,8 @@ public class TangramModule : MonoBehaviour
 
     private void OnInteractInputContactPoint(TangramGridConnectionPoint contactPoint)
     {
-        _bombModule.LogFormat("Selecting contact point {0} as input/positive.", _tangram.GetExternalConnectionIndex(contactPoint) + 1);
+        if (!_tpAutosolving)
+            _bombModule.LogFormat("Selecting contact point {0} as input/positive.", _tangram.GetExternalConnectionIndex(contactPoint) + 1);
 
         if (_previouslySelectedConnections.Any((x) => x.PointA.Equals(contactPoint)))
         {
@@ -154,14 +156,16 @@ public class TangramModule : MonoBehaviour
 
     private void OnInteractOutputContactPoint(TangramGridConnectionPoint contactPoint)
     {
-        _bombModule.LogFormat("Selecting contact point {0} as output/negative.", _tangram.GetExternalConnectionIndex(contactPoint) + 1);
+        if (!_tpAutosolving)
+            _bombModule.LogFormat("Selecting contact point {0} as output/negative.", _tangram.GetExternalConnectionIndex(contactPoint) + 1);
 
         _selectedConnection.PointB = contactPoint;
         if (_tangram.IsValidConnection(_selectedConnection))
         {
             ZapAndFinish(delegate()
             {
-                _bombModule.LogFormat("{0}→{1} is a valid input/positive to output/negative.", _tangram.GetExternalConnectionIndex(_selectedConnection.PointA) + 1, _tangram.GetExternalConnectionIndex(_selectedConnection.PointB) + 1);
+                if (!_tpAutosolving)
+                    _bombModule.LogFormat("{0}→{1} is a valid input/positive to output/negative.", _tangram.GetExternalConnectionIndex(_selectedConnection.PointA) + 1, _tangram.GetExternalConnectionIndex(_selectedConnection.PointB) + 1);
 
                 _previouslySelectedConnections.Add(new TangramGridConnection() { PointA = _selectedConnection.PointA, PointB = _selectedConnection.PointB });
                 if (_previouslySelectedConnections.Count >= RequiredInputCount)
@@ -202,16 +206,10 @@ public class TangramModule : MonoBehaviour
         _audio.PlaySoundAtTransform(SmallPopSound.name, transform);
     }
 
-    private void ModuleFinish(bool forced = false)
+    private void ModuleFinish()
     {
-        if (forced)
-        {
-            _bombModule.Log("Module force-solved!");
-        }
-        else
-        {
+        if (!_tpAutosolving)
             _bombModule.Log("Module defused!");
-        }
         _audio.PlaySoundAtTransform(BigPopSound.name, transform);
         _smoke.Play();
         _bombModule.HandlePass();
@@ -286,8 +284,68 @@ public class TangramModule : MonoBehaviour
         }
     }
 
-    private void TwitchHandleForcedSolve()
+    private IEnumerator TwitchHandleForcedSolve()
     {
-        ModuleFinish(true);
+        _tpAutosolving = true;
+        _bombModule.Log("Module force-solved!");
+        KMSelectable[] pins = _chip.PinSelectables;
+        if (_displayBar.Progress != 0.0f && !_tangram.IsValidConnection(_selectedConnection))
+        {
+            StopAllCoroutines();
+            _displayBar.Progress = 0.0f;
+            ModuleFinish();
+            yield break;
+        }
+        else
+            while (_displayBar.Progress != 0.0f) yield return true;
+        List<TangramGridConnection> valids = _tangram.GetValidConnections();
+        bool selectedValid = false;
+        if (_selectedConnection.PointA != null)
+        {
+            for (int k = 0; k < valids.Count; k++)
+            {
+                if (valids[k].PointA.Equals(_selectedConnection.PointA))
+                    selectedValid = true;
+            }
+            if (!selectedValid)
+            {
+                ModuleFinish();
+                yield break;
+            }
+        }
+        for (int j = 0; j < _previouslySelectedConnections.Count; j++)
+        {
+            for (int k = 0; k < valids.Count; k++)
+            {
+                if (valids[k].PointA.Equals(_previouslySelectedConnections[j].PointA))
+                {
+                    valids.RemoveAt(k);
+                    k--;
+                }
+            }
+        }
+        int end = RequiredInputCount - _previouslySelectedConnections.Count;
+        for (int i = 0; i < end; i++)
+        {
+            TangramGridConnection choice = valids.RandomPick();
+            if (!selectedValid)
+            {
+                pins[Array.IndexOf(_tangram.Grid.ExternalConnections, choice.PointA)].OnInteract();
+                yield return new WaitForSeconds(0.1f);
+            }
+            else
+                selectedValid = false;
+            pins[Array.IndexOf(_tangram.Grid.ExternalConnections, choice.PointB)].OnInteract();
+            for (int k = 0; k < valids.Count; k++)
+            {
+                if (valids[k].PointA.Equals(choice.PointA))
+                {
+                    valids.RemoveAt(k);
+                    k--;
+                }
+            }
+            _tpWaitingForResult = true;
+            while (_tpWaitingForResult) yield return true;
+        }
     }
 }

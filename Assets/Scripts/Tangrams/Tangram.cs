@@ -59,6 +59,11 @@ public class Tangram
         return Array.IndexOf(Grid.ExternalConnections, point);
     }
 
+    public List<TangramGridConnection> GetValidConnections()
+    {
+        return _validInputOutputConnections;
+    }
+
     public bool IsValidConnection(TangramGridConnection connection)
     {
         return IsValidConnection(connection.PointA, connection.PointB);
